@@ -1,9 +1,9 @@
 
 #include "Wiznet.h"
 
+#include "Core.h"
 #include "GPIO.h"
 #include "SPI.h"
-#include "Core.h"
 
 #include "Wiznet/Ethernet/wizchip_conf.h"
 #include "Wiznet/Internet/DHCP/dhcp.h"

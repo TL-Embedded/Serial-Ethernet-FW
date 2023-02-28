@@ -1,12 +1,8 @@
 
 #include "Core.h"
-#include "GPIO.h"
 #include "Wiznet.h"
-
 #include "Detect.h"
 #include "Com.h"
-
-#include <stdio.h>
 
 
 
