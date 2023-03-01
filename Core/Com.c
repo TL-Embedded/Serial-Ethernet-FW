@@ -41,15 +41,15 @@ void Com_Update(void)
 	{
 	case SOCK_CLOSED:
 		socket(COM_SOCKET, Sn_MR_TCP, COM_PORT, SF_IO_NONBLOCK);
-		break;
-
-	case SOCK_INIT:
 		listen(COM_SOCKET);
 		break;
 
 	case SOCK_ESTABLISHED:
 	case SOCK_CLOSE_WAIT:
 		Com_ReadSocket();
+		break;
+
+	default:
 		break;
 	}
 
@@ -91,10 +91,19 @@ static void Com_SendSerial(uint32_t count)
 
 static void Com_ReadSerial(void)
 {
-	uint32_t eol_pos = UART_Seek(SERIAL, '\n');
-	if (eol_pos)
+	uint32_t count = UART_ReadCount(SERIAL);
+
+	if (count > 64)
 	{
-		Com_SendSerial(eol_pos);
+		// Buffer is filling up - just get data out.
+		Com_SendSerial(256);
+		return;
+	}
+
+	uint32_t line_size = UART_Seek(SERIAL, '\n');
+	if (line_size)
+	{
+		Com_SendSerial(line_size);
 	}
 }
 
