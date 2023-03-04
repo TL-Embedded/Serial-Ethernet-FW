@@ -2,6 +2,7 @@
 #include "Com.h"
 
 #include "UART.h"
+#include "GPIO.h"
 #include "Wiznet/Ethernet/socket.h"
 
 /*
@@ -29,6 +30,8 @@ static void Com_ReadSerial(void);
 
 void Com_Init(void)
 {
+	GPIO_EnableOutput(LED_TX_PIN, GPIO_PIN_RESET);
+	GPIO_EnableOutput(LED_RX_PIN, GPIO_PIN_RESET);
 	UART_Init(SERIAL, SERIAL_BAUD, UART_Mode_Default);
 }
 
@@ -53,6 +56,8 @@ void Com_Update(void)
 		break;
 	}
 
+	GPIO_Write(LED_RX_PIN, UART_ReadCount(SERIAL) > 0);
+
 	if (status == SOCK_ESTABLISHED)
 	{
 		Com_ReadSerial();
@@ -61,6 +66,8 @@ void Com_Update(void)
 	{
 		UART_ReadFlush(SERIAL);
 	}
+
+	GPIO_Write(LED_TX_PIN, UART_WriteCount(SERIAL) > 0);
 }
 
 /*
