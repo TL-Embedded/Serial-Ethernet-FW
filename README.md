@@ -13,22 +13,10 @@ It provides the following key functionality:
 * A UDP detection port to enable programmatic discovery of the device
 * A TCP socket to enable reading and writing to the Serial port
 
-# Detection
+# MDNS
 
-This is intended to allow a program to discover the address and port of the scpi socket.
+The device declares itself using MDNS. By default, it will appears as `it6302.local` on the network - avoiding the need for a device discovery process.
 
-This is done by sending a UDP broadcast message from the master:
-* Port: `18191`
-* Data: `find_it6300`
-
-The device will reply to the sender with the IP address, MAC address and SCPI port.
-
-Example:
-```
-192.168.0.100
-01-02-03-04-05-06
-5025
-```
 
 See `Board.h` for configuring the detection port and contents.
 
