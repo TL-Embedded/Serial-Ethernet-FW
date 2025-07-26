@@ -7,12 +7,13 @@
 
 #include "Wiznet/Ethernet/wizchip_conf.h"
 #include "Wiznet/Internet/DHCP/dhcp.h"
+#include "Wiznet/Internet/MDNS/mdns.h"
 
 /*
  * PRIVATE DEFINITIONS
  */
 
-#define DHCP_SOCKET			0
+#define DHCP_POLL_PERIOD	10
 
 /*
  * PRIVATE TYPES
@@ -32,6 +33,14 @@ static inline void Wiznet_CS_Deselect(void);
  */
 
 static uint8_t gDhcpBuffer[548];
+static uint8_t gMdnsBuffer[MDNS_MAX_BUF_SIZE];
+
+static bool gLink = false;
+
+static struct {
+	uint32_t second_tick;
+	uint32_t poll_tick;
+} gTimers;
 
 /*
  * PUBLIC FUNCTIONS
@@ -55,8 +64,6 @@ void Wiznet_Init(void)
 		.duplex = PHY_DUPLEX_FULL,
 	};
 	wizphy_setphyconf(&phy_conf);
-
-	DHCP_init(DHCP_SOCKET, gDhcpBuffer);
 }
 
 void Wiznet_Deinit(void)
@@ -68,13 +75,40 @@ void Wiznet_Deinit(void)
 
 void Wiznet_Update(void)
 {
-	static uint32_t tlast = 0;
 	uint32_t now = CORE_GetTick();
-	if ((now - tlast) >= 1000)
+
+	if ((now - gTimers.second_tick) >= 1000)
 	{
+		gTimers.second_tick = now;
 		DHCP_time_handler();
+		MDNS_time_handler();
 	}
-	DHCP_run();
+
+	if ((now - gTimers.poll_tick) >= DHCP_POLL_PERIOD)
+	{
+		gTimers.poll_tick = now;
+		bool link = wizphy_getphylink();
+
+		if (link)
+		{
+			if (!gLink)
+			{
+				CORE_Delay(100);
+				DHCP_init(DHCP_SOCKET, gDhcpBuffer);
+				MDNS_init(MDNS_SOCKET, gMdnsBuffer, MDNS_HOSTNAME);
+			}
+
+			DHCP_run();
+			MDNS_run();
+		}
+		else if (gLink)
+		{
+			MDNS_stop();
+			DHCP_stop();
+		}
+
+		gLink = link;
+	}
 }
 
 /*

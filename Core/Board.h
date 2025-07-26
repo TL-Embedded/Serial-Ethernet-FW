@@ -42,6 +42,7 @@
 
 #define DHCP_SOCKET			0
 #define MDNS_SOCKET			1
+#define MDNS_HOSTNAME		"it6302"
 
 #define COM_SOCKET			2
 #define COM_PORT			5025
