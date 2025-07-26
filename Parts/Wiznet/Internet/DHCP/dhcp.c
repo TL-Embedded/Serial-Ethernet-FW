@@ -715,6 +715,7 @@ uint8_t DHCP_run(void)
 					dhcp_ip_assign();
 					reset_DHCP_timeout();
 
+					ret = DHCP_IP_CHANGED;
 					dhcp_state = STATE_DHCP_LEASED;
 				} else {
 					// IP address conflict occurred
@@ -944,10 +945,10 @@ void getIPfromDHCP(uint8_t* ip)
 
 void getGWfromDHCP(uint8_t* ip)
 {
-	ip[0] =DHCP_allocated_gw[0];
-	ip[1] =DHCP_allocated_gw[1];
-	ip[2] =DHCP_allocated_gw[2];
-	ip[3] =DHCP_allocated_gw[3];			
+	ip[0] = DHCP_allocated_gw[0];
+	ip[1] = DHCP_allocated_gw[1];
+	ip[2] = DHCP_allocated_gw[2];
+	ip[3] = DHCP_allocated_gw[3];
 }
 
 void getSNfromDHCP(uint8_t* ip)
