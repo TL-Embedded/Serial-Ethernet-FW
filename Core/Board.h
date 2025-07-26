@@ -41,10 +41,7 @@
 #define SERIAL_BAUD			38400
 
 #define DHCP_SOCKET			0
-
-#define DETECT_SOCKET		1
-#define DETECT_PORT			18191
-#define DETECT_STRING		"find_it6300"
+#define MDNS_SOCKET			1
 
 #define COM_SOCKET			2
 #define COM_PORT			5025
