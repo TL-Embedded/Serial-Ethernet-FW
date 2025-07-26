@@ -22,10 +22,10 @@
  * PRIVATE PROTOTYPES
  */
 
-static void Wiznet_SPI_Write(uint8_t byte);
-static uint8_t Wiznet_SPI_Read(void);
-static void Wiznet_CS_Select(void);
-static void Wiznet_CS_Deselect(void);
+static void Wiznet_SPI_Write(const uint8_t * tx, uint32_t size);
+static void Wiznet_SPI_Read(uint8_t * rx, uint32_t size);
+static inline void Wiznet_CS_Select(void);
+static inline void Wiznet_CS_Deselect(void);
 
 /*
  * PRIVATE VARIABLES
@@ -81,28 +81,24 @@ void Wiznet_Update(void)
  * PRIVATE FUNCTIONS
  */
 
-static void Wiznet_SPI_Write(uint8_t byte)
+static void Wiznet_SPI_Write(const uint8_t * tx, uint32_t size)
 {
-	SPI_Write(W5500_SPI, &byte, 1);
-	//SPI_TransferByte(W5500_SPI, byte);
+	SPI_Write(W5500_SPI, tx, size);
 }
 
-static uint8_t Wiznet_SPI_Read(void)
+static void Wiznet_SPI_Read(uint8_t * rx, uint32_t size)
 {
-	uint8_t byte;
-	SPI_Read(W5500_SPI, &byte, 1);
-	return byte;
-	//return SPI_TransferByte(W5500_SPI, 0x00);
+	SPI_Read(W5500_SPI, rx, size);
 }
 
-static void Wiznet_CS_Select(void)
+static inline void Wiznet_CS_Select(void)
 {
-	GPIO_Write(W5500_CS_PIN, GPIO_PIN_RESET);
+	GPIO_Reset(W5500_CS_PIN);
 }
 
-static void Wiznet_CS_Deselect(void)
+static inline void Wiznet_CS_Deselect(void)
 {
-	GPIO_Write(W5500_CS_PIN, GPIO_PIN_SET);
+	GPIO_Set(W5500_CS_PIN);
 }
 
 /*

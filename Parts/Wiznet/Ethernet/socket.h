@@ -314,6 +314,16 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
  */
 int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port);
 
+/**
+ * @ingroup WIZnet_socket_APIs
+ * @brief Discard remaining datagram of UDP or MACRAW
+ * @details This function discards any unread data in the current packet.
+ *
+ * @param sn   Socket number. It should be <b>0 ~ @ref \_WIZCHIP_SOCK_NUM_</b>.
+ *
+ * @return	@b Success : This function return discarded data size.\n
+ */
+int32_t recvdiscard(uint8_t sn);
 
 /////////////////////////////
 // SOCKET CONTROL & OPTION //

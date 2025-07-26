@@ -419,7 +419,35 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
 	return len;
 }
 
+int32_t recvdiscard(uint8_t sn)
+{
+   uint8_t  mr;
+   CHECK_SOCKNUM();
+   switch((mr=getSn_MR(sn)) & 0x0F)
+   {
+	  case Sn_MR_UDP:
+	  case Sn_MR_MACRAW:
+		 break;
+   #if ( _WIZCHIP_ < 5200 )
+	  case Sn_MR_IPRAW:
+	  case Sn_MR_PPPoE:
+		 break;
+   #endif
+	  default:
+		 return SOCKERR_SOCKMODE;
+   }
 
+   uint16_t remainder = sock_remained_size[sn];
+   if (remainder > 0)
+   {
+	   wiz_recv_ignore(sn, remainder);
+	   setSn_CR(sn,Sn_CR_RECV);
+	   while(getSn_CR(sn));
+	   sock_remained_size[sn] = 0;
+	   sock_pack_info[sn] = PACK_COMPLETED;
+   }
+   return remainder;
+}
 
 int32_t recvfrom(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t *port)
 {
