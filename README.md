@@ -10,13 +10,12 @@ This firmware is a simple remote serial port. It is intended to convert some TTL
 
 It provides the following key functionality: 
 * DHCP support for automatic IP assignment
-* A UDP detection port to enable programmatic discovery of the device
+* MDNS implementation for device discovery
 * A TCP socket to enable reading and writing to the Serial port
 
 # MDNS
 
 The device declares itself using MDNS. By default, it will appears as `it6302.local` on the network - avoiding the need for a device discovery process.
-
 
 See `Board.h` for configuring the detection port and contents.
 
