@@ -15,13 +15,15 @@ It provides the following key functionality:
 
 # MDNS
 
-The device declares itself using MDNS. By default, it will appears as `it6302.local` on the network - avoiding the need for a device discovery process.
+The device declares itself using MDNS. By default, it will appears as `ethernet-serial.local` on the network - avoiding the need for a device discovery process.
 
-See `Board.h` for configuring the detection port and contents.
+See [Config](#config) for setting the MDNS name.
 
 # TCP/Serial
 
-Open a TCP connection to port `5025`. Raw TCP messages can be used to read and write to the serial port. The serial port is configured at `38400 8N1` (see `Board.h`).
+Open a TCP connection to port `5025`. Raw TCP messages can be used to read and write to the serial port. The serial port is configured at `9600 8N1`.
+
+See [Config](#config) for setting the baud rate.
 
 Data recieved via TCP will be emitted to the serial port as soon as recieved. 
 
@@ -30,3 +32,14 @@ To minimise the number of discrete TCP read/writes, data read on the serial port
  2. Send all data if `64` or more bytes are buffered.
 
 > TODO: No timeout is used, but would be advisable for non SCPI applications.
+
+# Config
+
+The configuration is stored in the last flash page (0x0807800)
+
+| Offset | Type   | Default           | Description |
+| ------ | ------ | ----------------- | ----------- |
+| 0      | u32    | 9600              | UART baud rate |
+| 4      | u32    | 0                 | Reserved    |
+| 8      | u8[64] | "serial-ethernet" | MDNS host name as a null terminated string |
+| 72     | u32    | 0xAA0055AA        | Key. Must be this value or config will be defaulted |
