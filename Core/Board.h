@@ -38,11 +38,9 @@
 #define LED_RX_PIN			PA5
 
 #define SERIAL				UART_2
-#define SERIAL_BAUD			38400
 
 #define DHCP_SOCKET			0
 #define MDNS_SOCKET			1
-#define MDNS_HOSTNAME		"it6302"
 
 #define COM_SOCKET			2
 #define COM_PORT			5025

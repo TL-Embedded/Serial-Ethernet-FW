@@ -4,6 +4,7 @@
 #include "Core.h"
 #include "GPIO.h"
 #include "SPI.h"
+#include "Config.h"
 
 #include "Wiznet/Ethernet/wizchip_conf.h"
 #include "Wiznet/Internet/DHCP/dhcp.h"
@@ -95,7 +96,7 @@ void Wiznet_Update(void)
 			{
 				CORE_Delay(100);
 				DHCP_init(DHCP_SOCKET, gDhcpBuffer);
-				MDNS_init(MDNS_SOCKET, gMdnsBuffer, MDNS_HOSTNAME);
+				MDNS_init(MDNS_SOCKET, gMdnsBuffer, Config_Get()->name);
 			}
 
 			DHCP_run();

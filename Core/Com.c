@@ -3,6 +3,7 @@
 
 #include "UART.h"
 #include "GPIO.h"
+#include "Config.h"
 #include "Wiznet/Ethernet/socket.h"
 
 /*
@@ -32,7 +33,7 @@ void Com_Init(void)
 {
 	GPIO_EnableOutput(LED_TX_PIN, GPIO_PIN_RESET);
 	GPIO_EnableOutput(LED_RX_PIN, GPIO_PIN_RESET);
-	UART_Init(SERIAL, SERIAL_BAUD, UART_Mode_Default);
+	UART_Init(SERIAL, Config_Get()->baud, UART_Mode_Default);
 }
 
 void Com_Update(void)
